@@ -13,9 +13,11 @@ screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)  # initialize the window
 
 display = pygame.Surface((300, 200))  # renders all pixels twice as large in relation to the window screen
 
-player_image = pygame.image.load('player.png')
+player_image = pygame.image.load('player.png').convert()
+player_image.set_colorkey((255, 255, 255))  # "Green screen", makes white border transparent
 
 grass_image = pygame.image.load('grass.png')
+TILE_SIZE = grass_image.get_width()  # width of grass tiles which is 16px
 dirt_image = pygame.image.load('dirt.png')
 
 game_map = [['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
@@ -44,11 +46,20 @@ player_rect = pygame.Rect(player_location[0], player_location[1], player_image.g
 while True:  # game loop
     display.fill((146, 244, 255))
 
+    tile_rects = []  # keep track of tiles to be used for collisions
     y = 0
     for row in game_map:
         x = 0
         for tile in row:
-            x += 1
+            if tile == '1':  # 1 = dirt
+                display.blit(dirt_image, (x * TILE_SIZE, y * TILE_SIZE))  # rendering images
+            if tile == '2':  # 2 = grass
+                display.blit(grass_image, (x * TILE_SIZE, y * TILE_SIZE))  # TILE_SIZE refers to pixel width
+                # referenced above
+            if tile != '0':  # if tile is not air
+                tile_rects.append(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+            x += 1  # iterate across the row
+        y += 1  # move to next column
 
     display.blit(player_image, player_location)
 
