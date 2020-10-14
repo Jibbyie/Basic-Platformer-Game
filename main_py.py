@@ -34,14 +34,45 @@ game_map = [['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0
             ['1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1'],
             ['1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1']]
 
+
+def collision_test(rect, tiles):
+    hit_list = []
+    for tile in tiles:
+        if rect.colliderect(tile):
+            hit_list.append(tile)
+    return hit_list
+
+
+def move(rect, movement, tiles):  # x and y movement, thing moving/how/what it runs into
+    collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
+    rect.x += movement[0]
+    hit_list = collision_test(rect, tiles)  # rect refers to player
+    for tile in hit_list:
+        if movement[0] > 0:  # moving right
+            rect.right = tile.left
+            collision_types['right'] = True
+        elif movement[0] < 0:
+            rect.left = tile.right
+            collision_types['left'] = True
+    rect.y += movement[1]
+    hit_list = collision_test(rect, tiles)
+    for tile in hit_list:
+        if movement[1] > 0:
+            rect.bottom = tile.top
+            collision_types['bottom'] = True
+        elif movement[1] < 0:
+            rect.top = tile.bottom
+            collision_types['top'] = True
+    return rect, collision_types
+
+
 moving_right = False
 moving_left = False
 
-player_location = [50, 50]
 player_y_momentum = 0
 
 # Essentially the players "hitbox"
-player_rect = pygame.Rect(player_location[0], player_location[1], player_image.get_width(), player_image.get_height())
+player_rect = pygame.Rect(50, 50, player_image.get_width(), player_image.get_height())
 
 while True:  # game loop
     display.fill((146, 244, 255))
@@ -61,24 +92,19 @@ while True:  # game loop
             x += 1  # iterate across the row
         y += 1  # move to next column
 
-    display.blit(player_image, player_location)
-
-    # Bounce + Gravity | [1] refers to the y axis
-    """
-    if player_location[1] > WINDOW_SIZE[1] - player_image.get_height():  # if player image touches bottom of screen
-        player_y_momentum = -player_y_momentum  # momentum reverses (upward momentum)
-    else:
-    """
-    player_y_momentum += 0.2  # Gravity speed (always falling)
-    player_location[1] += player_y_momentum  # downward momentum
-
+    player_movement = [0, 0]
     if moving_right:
-        player_location[0] += 4
+        player_movement[0] += 2
     if moving_left:
-        player_location[0] -= 4
+        player_movement[0] -= 2
+    player_movement[1] += player_y_momentum
+    player_y_momentum += 0.2  # Gravity speed (always falling)
+    if player_y_momentum > 3:
+        player_y_momentum = 3
 
-    player_rect.x = player_location[0]  # player width hitbox
-    player_rect.y = player_location[1]  # player height hitbox
+    player_rect, collisions = move(player_rect, player_movement, tile_rects)
+
+    display.blit(player_image, (player_rect.x, player_rect.y))
 
     for event in pygame.event.get():
         if event.type == QUIT:
