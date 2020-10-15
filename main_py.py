@@ -57,7 +57,7 @@ def move(rect, movement, tiles):  # x and y movement, thing moving/how/what it r
     rect.y += movement[1]
     hit_list = collision_test(rect, tiles)
     for tile in hit_list:
-        if movement[1] > 0:
+        if movement[1] > 0:  # moving down
             rect.bottom = tile.top
             collision_types['bottom'] = True
         elif movement[1] < 0:
@@ -100,18 +100,18 @@ while True:  # game loop
         player_movement[0] -= 2
     player_movement[1] += player_y_momentum
     player_y_momentum += 0.2  # Gravity speed (always falling)
-    if player_y_momentum > 3:
+    if player_y_momentum > 3:  # constant downward acceleration cap
         player_y_momentum = 3
 
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
 
-    if collisions['bottom']:
+    if collisions['bottom']:  # solves infinite jump issue
         player_y_momentum = 0
         air_timer = 0
     else:
-        air_timer += 1
+        air_timer += 1  # if you're in the air add 1 to your leeway timer
     if collisions['top']:
-        player_y_momentum = 0
+        player_y_momentum = 0  # reset player momentum once head hits tile (to stop sticking)
 
     display.blit(player_image, (player_rect.x, player_rect.y))
 
@@ -125,8 +125,8 @@ while True:  # game loop
             if event.key == K_LEFT:
                 moving_left = True
             if event.key == K_UP:
-                if air_timer < 6:
-                    player_y_momentum = -5
+                if air_timer < 6:  # 6 frames (jumping leeway off a platform)
+                    player_y_momentum = -5  # Upward jumping momentum
         if event.type == KEYUP:  # If key is released (not being held) player does not move
             if event.key == K_RIGHT:
                 moving_right = False
