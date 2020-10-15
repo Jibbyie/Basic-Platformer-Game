@@ -70,6 +70,7 @@ moving_right = False
 moving_left = False
 
 player_y_momentum = 0
+air_timer = 0
 
 # Essentially the players "hitbox"
 player_rect = pygame.Rect(50, 50, player_image.get_width(), player_image.get_height())
@@ -104,6 +105,14 @@ while True:  # game loop
 
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
 
+    if collisions['bottom']:
+        player_y_momentum = 0
+        air_timer = 0
+    else:
+        air_timer += 1
+    if collisions['top']:
+        player_y_momentum = 0
+
     display.blit(player_image, (player_rect.x, player_rect.y))
 
     for event in pygame.event.get():
@@ -115,6 +124,9 @@ while True:  # game loop
                 moving_right = True
             if event.key == K_LEFT:
                 moving_left = True
+            if event.key == K_UP:
+                if air_timer < 6:
+                    player_y_momentum = -5
         if event.type == KEYUP:  # If key is released (not being held) player does not move
             if event.key == K_RIGHT:
                 moving_right = False
