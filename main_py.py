@@ -1,11 +1,14 @@
 import pygame
 import sys
-
+import os
+import random
+pygame.init()  # initialize pygame
 clock = pygame.time.Clock()
 
 from pygame.locals import *
+pygame.mixer.pre_init(44100, -16, 2, 512)  # frequency, size (1=mono 2=stereo), buffer to make non delayed sounds
+pygame.mixer.set_num_channels(64)  # number of channels for sounds to play
 
-pygame.init()  # initialize pygame
 pygame.display.set_caption('Basic Platformer')
 WINDOW_SIZE = (900, 600)
 
@@ -23,6 +26,14 @@ true_scroll = [0, 0]
 grass_image = pygame.image.load('grass.png')
 TILE_SIZE = grass_image.get_width()  # width of grass tiles which is 16px
 dirt_image = pygame.image.load('dirt.png')
+
+grass_sound_timer = 0 # to stop sound from constantly playing
+jump_sound = pygame.mixer.Sound('jump.wav')
+grass_sounds = [pygame.mixer.Sound('grass_0.wav'), pygame.mixer.Sound('grass_1.wav')]
+pygame.mixer.music.load('music.wav')
+pygame.mixer.music.play(-1)  # -1 plays infinitely
+grass_sounds[0].set_volume(0.2)
+grass_sounds[1].set_volume(0.2)
 
 
 def load_map(path):
@@ -115,6 +126,9 @@ background_objects = [[0.25, [120, 10, 70, 400]], [0.25, [280, 30, 40, 400]], [0
 while True:  # game loop
     display.fill((146, 244, 255))
 
+    if grass_sound_timer > 0:
+        grass_sound_timer -= 1
+
     true_scroll[0] += (player_rect.x - true_scroll[0] - 152) / 20  # half x axis, extra 2 references player width
     true_scroll[1] += (player_rect.y - true_scroll[1] - 106) / 20  # half y axis, extra 6 references player height
     scroll = true_scroll.copy()
@@ -171,6 +185,10 @@ while True:  # game loop
     if collisions['bottom']:  # solves infinite jump issue
         vertical_momentum = 0
         air_timer = 0
+        if player_movement[0] != 0:  # moving on the x axis
+            if grass_sound_timer == 0:  # will only play if timer is 0
+                grass_sound_timer = 30  # stops the sound from constantly playing
+                random.choice(grass_sounds).play()
     else:
         air_timer += 1  # if you're in the air add 1 to your leeway timer
     if collisions['top']:
@@ -189,6 +207,10 @@ while True:  # game loop
             pygame.quit()
             sys.exit()
         if event.type == KEYDOWN:  # If key is being pressed down
+            if event.key == K_w:
+                pygame.mixer.music.fadeout(2000)
+            if event.key == K_e:
+                pygame.mixer.music.play(-1)
             if event.key == K_RIGHT:
                 moving_right = True
             if event.key == K_LEFT:
@@ -196,6 +218,7 @@ while True:  # game loop
             if event.key == K_UP:
                 if air_timer < 6:  # 6 frames (jumping leeway off a platform)
                     vertical_momentum = -5  # Upward jumping momentum
+                    jump_sound.play()
         if event.type == KEYUP:  # If key is released (not being held) player does not move
             if event.key == K_RIGHT:
                 moving_right = False
