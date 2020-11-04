@@ -2,10 +2,12 @@ import pygame
 import sys
 import os
 import random
+
 pygame.init()  # initialize pygame
 clock = pygame.time.Clock()
 
 from pygame.locals import *
+
 pygame.mixer.pre_init(44100, -16, 2, 512)  # frequency, size (1=mono 2=stereo), buffer to make non delayed sounds
 pygame.mixer.set_num_channels(64)  # number of channels for sounds to play
 
@@ -26,8 +28,15 @@ true_scroll = [0, 0]
 grass_image = pygame.image.load('grass.png')
 TILE_SIZE = grass_image.get_width()  # width of grass tiles which is 16px
 dirt_image = pygame.image.load('dirt.png')
+plant_img = pygame.image.load('plant.png').convert()
+plant_img.set_colorkey((255, 255, 255))
 
-grass_sound_timer = 0 # to stop sound from constantly playing
+tile_index = {1: grass_image,
+              2: dirt_image,
+              3: plant_img
+              }
+
+grass_sound_timer = 0  # to stop sound from constantly playing
 jump_sound = pygame.mixer.Sound('jump.wav')
 grass_sounds = [pygame.mixer.Sound('grass_0.wav'), pygame.mixer.Sound('grass_1.wav')]
 pygame.mixer.music.load('music.wav')
@@ -35,16 +44,26 @@ pygame.mixer.music.play(-1)  # -1 plays infinitely
 grass_sounds[0].set_volume(0.2)
 grass_sounds[1].set_volume(0.2)
 
+CHUNK_SIZE = 8
 
-def load_map(path):
-    f = open(path + '.txt', 'r')
-    data = f.read()
-    f.close()
-    data = data.split('\n')
-    game_map = []
-    for row in data:
-        game_map.append(list(row))
-    return game_map
+
+def generate_chunk(x, y):
+    chunk_data = []
+    for y_pos in range(CHUNK_SIZE):
+        for x_pos in range(CHUNK_SIZE):
+            target_x = x * CHUNK_SIZE + x_pos
+            target_y = y * CHUNK_SIZE + y_pos
+            tile_type = 0  # nothing
+            if target_y > 10:
+                tile_type = 2  # dirt
+            elif target_y == 10:
+                tile_type = 1  # grass
+            elif target_y == 9:
+                if random.randint(1, 5) == 1:
+                    tile_type = 3  # plant
+            if tile_type != 0:
+                chunk_data.append([[target_x, target_y], tile_type])
+    return chunk_data
 
 
 global animation_frames
@@ -84,7 +103,7 @@ player_action = 'idle'
 player_frame = 0
 player_flip = False
 
-game_map = load_map('map')
+game_map = {}
 
 
 def collision_test(rect, tiles):
@@ -144,22 +163,19 @@ while True:  # game loop
             pygame.draw.rect(display, (14, 222, 150), obj_rect)
         else:
             pygame.draw.rect(display, (9, 91, 85), obj_rect)
-    tile_rects = []  # keep track of tiles to be used for collisions
-    y = 0
-    for layer in game_map:
-        x = 0
-        for tile in layer:
-            if tile == '1':  # 1 = dirt
-                display.blit(dirt_image, (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))  # rendering images
-            if tile == '2':  # 2 = grass
-                display.blit(grass_image,
-                             (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))  # TILE_SIZE refers to pixel width
-                # referenced above
 
-            if tile != '0':  # if tile is not air
-                tile_rects.append(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
-            x += 1  # iterate across the row
-        y += 1  # move to next column
+    tile_rects = []  # keep track of tiles to be used for collisions
+    for y in range(3):
+        for x in range(4):
+            target_x = x - 1 + int(round(scroll[0] / (CHUNK_SIZE * 16)))
+            target_y = y - 1 + int(round(scroll[1] / (CHUNK_SIZE * 16)))
+            target_chunk = str(target_x) + ';' + str(target_y)
+            if target_chunk not in game_map:
+                game_map[target_chunk] = generate_chunk(target_x, target_y)
+            for tile in game_map[target_chunk]:
+                display.blit(tile_index[tile[1]], (tile[0][0] * 16 - scroll[0], tile[0][1] * 16 - scroll[1]))
+                if tile[1] in [1, 2]:
+                    tile_rects.append(pygame.Rect(tile[0][0] * 16, tile[0][1] * 16, 16, 16))
 
     player_movement = [0, 0]
     if moving_right:

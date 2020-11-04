@@ -2,10 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4f233361-ad74-4e2f-98be-4b17286a2855" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plant.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/PyGamePlatformer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PyGamePlatformer.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_py.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_py.py" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,21 +26,14 @@
   </component>
   <component name="ProjectId" id="1irdYsGVscJQU7q3V5c0YrvgJJ8" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../PygameTest" />
-    <property name="settings.editor.selected.configurable" value="discord-application" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
   </component>
   <component name="RunManager">
     <configuration name="main_py" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -67,6 +63,7 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -85,12 +82,37 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1702" y="458" key="FileChooserDialogImpl" timestamp="1604531716717">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1702" y="458" key="FileChooserDialogImpl/0.0.2560.1400@0.0.2560.1400" timestamp="1604531716717" />
+    <state width="1257" height="391" key="GridCell.Tab.0.bottom" timestamp="1604532833033">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1257" height="391" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1604532833033" />
+    <state width="1257" height="391" key="GridCell.Tab.0.center" timestamp="1604532833033">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1257" height="391" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1604532833033" />
+    <state width="1257" height="391" key="GridCell.Tab.0.left" timestamp="1604532833033">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1257" height="391" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1604532833033" />
+    <state width="1257" height="391" key="GridCell.Tab.0.right" timestamp="1604532833033">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1257" height="391" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1604532833033" />
+    <state x="1421" y="348" key="SettingsEditor" timestamp="1604533471254">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1421" y="348" key="SettingsEditor/0.0.2560.1400@0.0.2560.1400" timestamp="1604533471254" />
   </component>
 </project>
